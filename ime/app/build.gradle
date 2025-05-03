@@ -25,7 +25,7 @@ android {
         buildConfigField "int", "VERSION_CODE", "1"
 
         multiDexEnabled true
-        minSdkVersion 21
+        minSdkVersion 29
     }
 
     buildTypes {
