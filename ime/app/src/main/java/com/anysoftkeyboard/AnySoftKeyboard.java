@@ -16,8 +16,10 @@
 
 package com.anysoftkeyboard;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.IBinder;
@@ -92,6 +94,7 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
 
   private boolean mAutoCap;
   private boolean mKeyboardAutoCap;
+  private AnySoftKeyboardVoiceHotKeyBroadcastReceiver anySoftKeyboardVoiceHotKeyBroadcastReceiver;
 
   private static boolean isBackWordDeleteCodePoint(int c) {
     return Character.isLetterOrDigit(c);
@@ -232,6 +235,14 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
     mVoiceRecognitionTrigger = new VoiceRecognitionTrigger(this);
 
     mDevToolsAction = new DevStripActionProvider(this);
+
+    anySoftKeyboardVoiceHotKeyBroadcastReceiver = new AnySoftKeyboardVoiceHotKeyBroadcastReceiver();
+    ContextCompat.registerReceiver(
+            this.getApplicationContext(),
+            anySoftKeyboardVoiceHotKeyBroadcastReceiver,
+            anySoftKeyboardVoiceHotKeyBroadcastReceiver.getIntentFilter(),
+            ContextCompat.RECEIVER_EXPORTED
+    );
   }
 
   @Override
@@ -253,6 +264,7 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
           .show();
     }
 
+    unregisterReceiver(anySoftKeyboardVoiceHotKeyBroadcastReceiver);
     super.onDestroy();
   }
 
@@ -282,7 +294,6 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
     inputView.setKeyboardActionType(attribute.imeOptions);
 
     updateShiftStateNow();
-
     if (BuildConfig.DEBUG) {
       getInputViewContainer().addStripAction(mDevToolsAction, false);
     }
@@ -463,15 +474,15 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
         sendDownUpKeyEvents(KeyEvent.KEYCODE_MOVE_END);
         break;
       case KeyCodes.VOICE_INPUT:
-        if (mVoiceRecognitionTrigger.isInstalled()) {
-          mVoiceRecognitionTrigger.startVoiceRecognition(
-              getCurrentAlphabetKeyboard().getDefaultDictionaryLocale());
-        } else {
-          Intent voiceInputNotInstalledIntent =
-              new Intent(getApplicationContext(), VoiceInputNotInstalledActivity.class);
-          voiceInputNotInstalledIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-          startActivity(voiceInputNotInstalledIntent);
-        }
+//        if (mVoiceRecognitionTrigger.isInstalled()) {
+//          mVoiceRecognitionTrigger.startVoiceRecognition(
+//              getCurrentAlphabetKeyboard().getDefaultDictionaryLocale());
+//        } else {
+//          Intent voiceInputNotInstalledIntent =
+//              new Intent(getApplicationContext(), VoiceInputNotInstalledActivity.class);
+//          voiceInputNotInstalledIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//          startActivity(voiceInputNotInstalledIntent);
+//        }
         break;
       case KeyCodes.CANCEL:
         if (!handleCloseRequest()) {
@@ -1165,6 +1176,13 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
     } else {
       mControlKeyState.onOtherKeyPressed();
     }
+
+    if (primaryCode == KeyCodes.VOICE_INPUT) {
+      final Intent pressedIntent = new Intent("com.anysoftkeyboard.action.voice_input");
+      pressedIntent.putExtra("action", "pressed");
+      sendBroadcast(pressedIntent);
+      Log.v("vhk", "sending broadcast: com.anysoftkeyboard.action.voice_input pressed");
+    }
   }
 
   @Override
@@ -1187,6 +1205,13 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
       mControlKeyState.onOtherKeyReleased();
     }
     handleControl();
+
+    if (primaryCode == KeyCodes.VOICE_INPUT) {
+      final Intent pressedIntent = new Intent("com.anysoftkeyboard.action.voice_input");
+      pressedIntent.putExtra("action", "released");
+      sendBroadcast(pressedIntent);
+      Log.v("vhk", "sending broadcast: com.anysoftkeyboard.action.voice_input released");
+    }
   }
 
   private void launchSettings() {
@@ -1397,5 +1422,23 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
     Logger.d(TAG, "shift updateShiftStateNow inputSaysCaps=%s", inputSaysCaps);
     mShiftKeyState.setActiveState(inputSaysCaps);
     handleShift();
+  }
+
+  public class AnySoftKeyboardVoiceHotKeyBroadcastReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      Log.v("AnySoftKeyboardVoiceHotKeyBroadcastReceiver", "onReceive");
+      final String result = intent.getStringExtra("result");
+
+      final InputConnection ic = getCurrentInputConnection();
+      if (ic != null) {
+        ic.commitText(result, 1);
+      }
+    }
+
+    public IntentFilter getIntentFilter() {
+      return new IntentFilter("com.emoji.voicehotkey.transcribe");
+    }
   }
 }
