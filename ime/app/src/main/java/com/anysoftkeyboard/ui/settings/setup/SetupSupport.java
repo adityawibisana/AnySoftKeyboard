@@ -21,17 +21,10 @@ import java.util.Objects;
 public class SetupSupport {
 
   public static boolean isThisKeyboardSetAsDefaultIME(Context context) {
-    var inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-      InputMethodInfo currentInputMethodInfo = inputManager.getCurrentInputMethodInfo();
-      return currentInputMethodInfo != null
-          && !Objects.equals(currentInputMethodInfo.getPackageName(), context.getPackageName());
-    } else {
-      final String defaultIME =
-          Settings.Secure.getString(
-              context.getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);
-      return isThisKeyboardSetAsDefaultIMEPrior34(defaultIME, context.getPackageName());
-    }
+    final String defaultIME =
+            Settings.Secure.getString(
+                    context.getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);
+    return isThisKeyboardSetAsDefaultIMEPrior34(defaultIME, context.getPackageName());
   }
 
   private static boolean isThisKeyboardSetAsDefaultIMEPrior34(
