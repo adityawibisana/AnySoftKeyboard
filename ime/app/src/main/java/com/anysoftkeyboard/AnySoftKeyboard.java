@@ -248,11 +248,9 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
   @SuppressLint("WrongConstant")
   private void registerVoiceHotKeyReceiver() {
     anySoftKeyboardVoiceHotKeyBroadcastReceiver = new AnySoftKeyboardVoiceHotKeyBroadcastReceiver();
-    ContextCompat.registerReceiver(
-            this.getApplicationContext(),
+    LocalBroadcastManager.getInstance(this.getApplicationContext()).registerReceiver(
             anySoftKeyboardVoiceHotKeyBroadcastReceiver,
-            anySoftKeyboardVoiceHotKeyBroadcastReceiver.getIntentFilter(),
-            ContextCompat.RECEIVER_EXPORTED
+            anySoftKeyboardVoiceHotKeyBroadcastReceiver.getIntentFilter()
     );
     voiceHotKeyStateBroadcastReceiver = new VoiceHotKeyStateBroadcastReceiver();
     LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
@@ -280,7 +278,8 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
           .show();
     }
 
-    unregisterReceiver(anySoftKeyboardVoiceHotKeyBroadcastReceiver);
+    LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(anySoftKeyboardVoiceHotKeyBroadcastReceiver);
+    LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(voiceHotKeyStateBroadcastReceiver);
     super.onDestroy();
   }
 
@@ -1196,7 +1195,7 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
     if (primaryCode == KeyCodes.VOICE_INPUT) {
       final Intent pressedIntent = new Intent("com.anysoftkeyboard.action.voice_input");
       pressedIntent.putExtra("action", "pressed");
-      sendBroadcast(pressedIntent);
+      LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pressedIntent);
       Log.v("vhk", "sending broadcast: com.anysoftkeyboard.action.voice_input pressed");
     }
   }
@@ -1225,7 +1224,7 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
     if (primaryCode == KeyCodes.VOICE_INPUT) {
       final Intent pressedIntent = new Intent("com.anysoftkeyboard.action.voice_input");
       pressedIntent.putExtra("action", "released");
-      sendBroadcast(pressedIntent);
+      LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pressedIntent);
       Log.v("vhk", "sending broadcast: com.anysoftkeyboard.action.voice_input released");
     }
   }
