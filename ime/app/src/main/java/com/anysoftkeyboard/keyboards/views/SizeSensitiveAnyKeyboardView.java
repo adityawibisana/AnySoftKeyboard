@@ -3,7 +3,7 @@ package com.anysoftkeyboard.keyboards.views;
 import android.content.Context;
 import android.util.AttributeSet;
 
-public class SizeSensitiveAnyKeyboardView extends AnyKeyboardViewBase {
+public class SizeSensitiveAnyKeyboardView extends VoiceHotKeyStateView {
   public SizeSensitiveAnyKeyboardView(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
