@@ -30,7 +30,6 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
             proguardFiles 'proguard-android-optimize.txt', 'proguard-rules.txt', 'proguard-anysoftkeyboard.txt', 'proguard-dont-obs.txt'
         }
 

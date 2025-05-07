@@ -23,7 +23,6 @@
         android:required="false" />
 
     <application
-        android:name=".AnyApplication"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:installLocation="internalOnly"
