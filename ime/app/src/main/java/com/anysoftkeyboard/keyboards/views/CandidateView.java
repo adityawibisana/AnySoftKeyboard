@@ -26,6 +26,7 @@ import android.graphics.Paint.Align;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.text.Layout;
 import android.text.Layout.Alignment;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -253,107 +254,99 @@ public class CandidateView extends View implements ThemeableChild {
 
     final int height = getHeight();
     if (mBgPadding == null) {
-      mBgPadding = new Rect(0, 0, 0, 0);
+      mBgPadding = new Rect();
       if (getBackground() != null) {
         getBackground().getPadding(mBgPadding);
       }
       mDivider.setBounds(0, 0, mDivider.getIntrinsicWidth(), mDivider.getIntrinsicHeight());
     }
 
-    final int dividerYOffset = (height - mDivider.getMinimumHeight()) / 2;
     final int count = mSuggestions.size();
-    final Rect bgPadding = mBgPadding;
-    final Paint paint = mPaint;
     final int touchX = mTouchX;
     final int scrollX = getScrollX();
     final boolean scrolled = mScrolled;
+    final ThemeResourcesHolder theme = mThemeOverlayCombiner.getThemeResources();
+    final Rect bgPadding = mBgPadding;
 
-    final ThemeResourcesHolder themeResources = mThemeOverlayCombiner.getThemeResources();
     int x = 0;
     for (int i = 0; i < count; i++) {
       CharSequence suggestion = mSuggestions.get(i);
-      if (suggestion == null) {
-        continue;
-      }
-      final int wordLength = suggestion.length();
+      if (suggestion == null) continue;
 
-      paint.setColor(themeResources.getNameTextColor());
-      paint.setTypeface(Typeface.DEFAULT);
-      if (i == mHighlightedIndex) {
-        paint.setTypeface(Typeface.DEFAULT_BOLD);
-        paint.setColor(themeResources.getKeyTextColor().getDefaultColor());
-        // existsAutoCompletion = true;
-      } else if (i != 0 || (wordLength == 1 && count > 1)) {
-        // HACK: even if i == 0, we use mColorOther when this
-        // suggestion's length is 1 and
-        // there are multiple suggestions, such as the default
-        // punctuation list.
-        paint.setColor(themeResources.getHintTextColor());
-      }
+      // Configure paint style
+      configurePaintStyle(i, suggestion.length(), count, theme);
 
-      // now that we set the typeFace, we can measure
-      int wordWidth;
-      if ((wordWidth = mWordWidth[i]) == 0) {
-        float textWidth = paint.measureText(suggestion, 0, wordLength);
-        // wordWidth = Math.max(0, (int) textWidth + X_GAP * 2);
-        wordWidth = (int) (textWidth + mHorizontalGap * 2);
+      // Measure word width if not cached
+      int wordWidth = mWordWidth[i];
+      if (wordWidth == 0) {
+        wordWidth = (int) (mPaint.measureText(suggestion, 0, suggestion.length()) + mHorizontalGap * 2);
         mWordWidth[i] = wordWidth;
       }
-
       mWordX[i] = x;
 
-      if (touchX != OUT_OF_BOUNDS_X_CORD
-          && !scrolled
-          && touchX + scrollX >= x
-          && touchX + scrollX < x + wordWidth) {
-        if (!mShowingAddToDictionary) {
-          canvas.translate(x, 0);
-          mSelectionHighlight.setBounds(0, bgPadding.top, wordWidth, height);
-          mSelectionHighlight.draw(canvas);
-          canvas.translate(-x, 0);
-        }
+      boolean isTouched = touchX != OUT_OF_BOUNDS_X_CORD &&
+              !scrolled &&
+              touchX + scrollX >= x &&
+              touchX + scrollX < x + wordWidth;
+
+      if (isTouched && !mShowingAddToDictionary) {
+        mSelectionHighlight.setBounds(x, bgPadding.top, x + wordWidth, height);
+        mSelectionHighlight.draw(canvas);
         mSelectedString = suggestion;
         mSelectedIndex = i;
       }
 
-      // (+)This is the trick to get RTL/LTR text correct
-      if (mAlwaysUseDrawText) {
-        final int y = (int) (height + paint.getTextSize() - paint.descent()) / 2;
-        canvas.drawText(suggestion, 0, wordLength, x + wordWidth / 2f, y, paint);
-      } else {
-        final int y = (int) (height - paint.getTextSize() + paint.descent()) / 2;
-        // no matter what: StaticLayout
-        float textX = x + (wordWidth / 2.0f) - mHorizontalGap;
-        float textY = y - bgPadding.bottom - bgPadding.top;
+      drawSuggestion(canvas, suggestion, x, wordWidth, height, bgPadding);
 
-        canvas.translate(textX, textY);
-        mTextPaint.setTypeface(paint.getTypeface());
-        mTextPaint.setColor(paint.getColor());
-
-        StaticLayout suggestionText =
-            new StaticLayout(
-                suggestion, mTextPaint, wordWidth, Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
-        suggestionText.draw(canvas);
-
-        canvas.translate(-textX, -textY);
-      }
-      // (-)
-      // paint.setColor(themeResources.getHintTextColor());
-      canvas.translate(x + wordWidth, 0);
-      // Draw a divider unless it's after the hint
-      // or the last suggested word
-      if (count > 1 && !mShowingAddToDictionary && i != (count - 1)) {
-        canvas.translate(0, dividerYOffset);
-        mDivider.draw(canvas);
-        canvas.translate(0, -dividerYOffset);
-      }
-      canvas.translate(-x - wordWidth, 0);
-      // paint.setTypeface(Typeface.DEFAULT);
       x += wordWidth;
+
+      // Draw divider
+      if (count > 1 && !mShowingAddToDictionary && i < count - 1) {
+        int dividerY = (height - mDivider.getMinimumHeight()) / 2;
+        mDivider.setBounds(x, dividerY, x + mDivider.getIntrinsicWidth(), dividerY + mDivider.getIntrinsicHeight());
+        mDivider.draw(canvas);
+      }
     }
+
     mTotalWidth = x;
+
     if (mTargetScrollX != scrollX) {
       scrollToTarget();
+    }
+  }
+
+  private void configurePaintStyle(int index, int wordLength, int totalCount, ThemeResourcesHolder theme) {
+    mPaint.setTypeface(Typeface.DEFAULT);
+
+    if (index == mHighlightedIndex) {
+      mPaint.setTypeface(Typeface.DEFAULT_BOLD);
+      mPaint.setColor(theme.getKeyTextColor().getDefaultColor());
+    } else if (index != 0 || (wordLength == 1 && totalCount > 1)) {
+      mPaint.setColor(theme.getHintTextColor());
+    } else {
+      mPaint.setColor(theme.getNameTextColor());
+    }
+  }
+
+  private void drawSuggestion(Canvas canvas, CharSequence text, int x, int width, int height, Rect padding) {
+    if (mAlwaysUseDrawText) {
+      float centerY = (height + mPaint.getTextSize() - mPaint.descent()) / 2;
+      canvas.drawText(text, 0, text.length(), x + width / 2f, centerY, mPaint);
+    } else {
+      float layoutX = x + (width / 2f) - mHorizontalGap;
+      float layoutY = (height - mPaint.getTextSize() + mPaint.descent()) / 2 - padding.top - padding.bottom;
+
+      canvas.save();
+      canvas.translate(layoutX, layoutY);
+
+      mTextPaint.setTypeface(mPaint.getTypeface());
+      mTextPaint.setColor(mPaint.getColor());
+
+      StaticLayout layout = new StaticLayout(
+              text, mTextPaint, width, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false
+      );
+      layout.draw(canvas);
+      canvas.restore();
     }
   }
 
