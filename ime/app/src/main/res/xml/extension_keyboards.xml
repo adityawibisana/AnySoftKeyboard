@@ -93,12 +93,20 @@
 
     <!-- bottom rows -->
     <ExtensionKeyboard
+        id="10f5f449-dee2-11e0-9572-0800200c9a66"
+        nameResId="VoiceHotKey"
+        extensionKeyboardResId="@xml/ext_kbd_bottom_row_voicehotkey"
+        extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
+        description=""
+        index="1"
+        />
+    <ExtensionKeyboard
             id="09f8f280-dee2-11e0-9572-0800200c9a66"
             nameResId="@string/extension_kbd_bottom_regular_with_voice"
             extensionKeyboardResId="@xml/ext_kbd_bottom_row_regular_with_voice"
             extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
             description=""
-            index="1"
+            index="2"
             />
     <ExtensionKeyboard
             id="09f8f280-dee2-11e0-9572-0800200c9a55"
@@ -106,7 +114,7 @@
             extensionKeyboardResId="@xml/ext_kbd_bottom_row_regular"
             extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
             description=""
-            index="2"
+            index="3"
             />
     <ExtensionKeyboard
             id="3659b9e0-dee2-11e0-9572-0800200c9a66"
@@ -114,7 +122,7 @@
             extensionKeyboardResId="@xml/ext_kbd_bottom_row_iphone_with_mic"
             extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
             description=""
-            index="3"
+            index="4"
             />
     <ExtensionKeyboard
             id="3659b9e0-dee2-11e0-9572-0800200c9a55"
@@ -122,7 +130,7 @@
             extensionKeyboardResId="@xml/ext_kbd_bottom_row_iphone"
             extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
             description=""
-            index="4"
+            index="5"
             />
     <ExtensionKeyboard
             id="3DFFC2AD-8BC8-47F3-962A-918156AD8DD0"
@@ -130,7 +138,7 @@
             extensionKeyboardResId="@xml/ext_kbd_bottom_row_alt_with_mic"
             extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
             description=""
-            index="5"
+            index="6"
             />
     <ExtensionKeyboard
             id="59295DFF-4A34-4DC9-86E1-8844F56F6858"
@@ -138,7 +146,7 @@
             extensionKeyboardResId="@xml/ext_kbd_bottom_row_alt"
             extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
             description=""
-            index="6"
+            index="7"
             />
     <ExtensionKeyboard
         id="d8657c90-d910-11e2-a28f-0800200c9a66"
@@ -146,7 +154,7 @@
         extensionKeyboardResId="@xml/ext_kbd_bottom_row_ng"
         extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
         description=""
-        index="7"
+        index="8"
         />
     <ExtensionKeyboard
         id="66e1c3a5-42d7-48be-8f97-d2a3a9e38be9"
@@ -154,7 +162,7 @@
         extensionKeyboardResId="@xml/ext_kbd_bottom_row_ng_no_apo"
         extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
         description=""
-        index="8"
+        index="9"
         />
     <ExtensionKeyboard
         id="d8657c90-d910-11e-2ae28f-0800200c9a99"
@@ -162,7 +170,7 @@
         extensionKeyboardResId="@xml/ext_kbd_bottom_row_old"
         extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
         description=""
-        index="9"
+        index="10"
         />
     <ExtensionKeyboard
         id="c4abded0-db89-11e7-8f1a-0800200c9a66"
@@ -170,7 +178,7 @@
         extensionKeyboardResId="@xml/ext_kbd_bottom_row_simple"
         extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
         description=""
-        index="10"
+        index="11"
         />
     <ExtensionKeyboard
         id="a81483fe-8914-4a5a-9e5f-2e79265ff252"
@@ -178,7 +186,7 @@
         extensionKeyboardResId="@xml/ext_kbd_bottom_row_simple_alt"
         extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
         description=""
-        index="11"
+        index="12"
         />
     <ExtensionKeyboard
         id="f5326050-2471-42e0-a470-c5d52d08dc9d"
@@ -186,7 +194,7 @@
         extensionKeyboardResId="@xml/ext_kbd_bottom_row_minimal"
         extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
         description=""
-        index="12"
+        index="13"
         />
     <ExtensionKeyboard
         id="f50fee17-ad7a-4068-aff4-07e34ac68c52"
@@ -194,7 +202,7 @@
         extensionKeyboardResId="@xml/ext_kbd_bottom_row_minimal_no_emoji"
         extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
         description=""
-        index="13"
+        index="14"
         />
     <ExtensionKeyboard
         id="f6196797-62b7-4f98-b1fa-7fe151ec7b3d"
@@ -202,7 +210,7 @@
         extensionKeyboardResId="@xml/ext_kbd_bottom_row_minimal_less_punctuation"
         extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
         description=""
-        index="14"
+        index="15"
         />
 
     <ExtensionKeyboard
@@ -211,7 +219,7 @@
         extensionKeyboardResId="@xml/ext_kbd_bottom_row_aosp"
         extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
         description=""
-        index="15"
+        index="16"
         />
 
     <ExtensionKeyboard
@@ -220,7 +228,7 @@
         extensionKeyboardResId="@xml/ext_kbd_bottom_row_minimal_alt"
         extensionKeyboardType="@integer/extension_keyboard_type_bottom_row"
         description=""
-        index="16"
+        index="17"
         />
 
 
