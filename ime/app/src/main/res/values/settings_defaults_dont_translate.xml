@@ -25,8 +25,8 @@
     <bool name="settings_default_cycle_all_symbols">true</bool>
     <bool name="settings_default_use_volume_key_for_left_right">false</bool>
     <bool name="settings_default_do_not_flip_quick_keys_functionality">true</bool>
-    <bool name="settings_default_quick_fix">true</bool>
-    <bool name="settings_default_key_quick_fix_second_disabled">false</bool>
+    <bool name="settings_default_quick_fix">false</bool>
+    <bool name="settings_default_key_quick_fix_second_disabled">true</bool>
     <bool name="settings_default_contacts_dictionary">true</bool>
     <bool name="settings_default_always_hide_language_key">false</bool>
     <string name="settings_default_auto_dictionary_add_threshold">9</string>
@@ -63,7 +63,7 @@
 
     <string name="settings_default_keyboard_id">@string/main_english_keyboard_id</string>
     <string name="settings_default_quick_text_key_id">698b8c20-19df-11e1-bddb-0800200c9a66</string>
-    <string name="settings_default_top_row_key">5d945f40-ded5-11e0-9572-0800200c9a66</string>
+    <string name="settings_default_top_row_key">1fae0220-ded6-11e0-9572-0800200c9a66</string>
     <string name="settings_default_keyboard_theme_key">8774f99e-fb4a-49fa-b8d0-4083f762250a</string>
     <string name="settings_default_ext_keyboard_key">6f1ecea0-dee2-11e0-9572-0800200c9a66</string>
     <string name="settings_default_ext_kbd_bottom_row_key">09f8f280-dee2-11e0-9572-0800200c9a66</string>
@@ -134,7 +134,7 @@
 
     <bool name="settings_default_workaround_disable_rtl_fix">true</bool>
 
-    <bool name="settings_default_try_splitting_words_for_correction">true</bool>
+    <bool name="settings_default_try_splitting_words_for_correction">false</bool>
 
     <dimen name="key_hysteresis_distance">10dp</dimen>
 

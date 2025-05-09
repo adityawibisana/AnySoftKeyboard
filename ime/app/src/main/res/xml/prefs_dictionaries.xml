@@ -44,7 +44,7 @@
             android:title="@string/auto_caps"/>
 
         <androidx.preference.CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:dependency="candidates_on"
             android:key="@string/settings_key_quick_fix"
             android:persistent="true"
@@ -52,7 +52,7 @@
             android:summaryOn="@string/quick_fix_summary"
             android:title="@string/quick_fix"/>
         <androidx.preference.CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:dependency="@string/settings_key_quick_fix"
             android:key="@string/settings_key_quick_fix_second_disabled"
             android:persistent="true"
