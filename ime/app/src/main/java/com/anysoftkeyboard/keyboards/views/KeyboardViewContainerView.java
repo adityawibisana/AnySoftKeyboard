@@ -10,7 +10,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+
 import com.anysoftkeyboard.ime.InputViewActionsProvider;
 import com.anysoftkeyboard.ime.InputViewBinder;
 import com.anysoftkeyboard.keyboards.views.extradraw.ExtraDraw;
@@ -206,29 +209,104 @@ public class KeyboardViewContainerView extends ViewGroup implements ThemeableChi
     final int left = l + getPaddingLeft();
     final int right = r - getPaddingRight();
     int currentTop = t + getPaddingTop();
-    final int actionsTop = t + getPaddingTop();
-    int actionRight = r - getPaddingRight();
+    final int voiceHotKeyIconWidth = 80;
+
+    View candidateView = null;
+    View leftCandidate = null;
+    View rightCandidate = null;
+
+    // First pass: find specific views
     for (int i = 0; i < count; i++) {
       final View child = getChildAt(i);
       if (child.getVisibility() == View.GONE) continue;
-      if (child.getTag(PROVIDER_TAG_ID) == null) {
-        child.layout(left, currentTop, right, currentTop + child.getMeasuredHeight());
-        currentTop += child.getMeasuredHeight();
-      } else {
-        // this is an action. It lives on the candidates-view
-        child.layout(
-            actionRight - child.getMeasuredWidth(),
-            actionsTop,
-            actionRight,
-            actionsTop + child.getMeasuredHeight());
-        actionRight -= child.getMeasuredWidth();
+
+      Object tag = child.getTag();
+      if (child instanceof CandidateView) {
+        candidateView = child;
+      } else if ("left_candidate_view".equals(tag)) {
+        leftCandidate = child;
+      } else if ("right_candidate_view".equals(tag)) {
+        rightCandidate = child;
       }
     }
-    // setting up the extra-offset for the main-keyboard
-    final var mainKeyboard = ((View) mStandardKeyboardView);
+
+    // Layout CandidateView first
+    int candidateHeight = 0;
+    if (candidateView != null) {
+      candidateHeight = candidateView.getMeasuredHeight();
+      candidateView.layout(
+              left + voiceHotKeyIconWidth,
+              currentTop,
+              right - voiceHotKeyIconWidth,
+              currentTop + candidateHeight
+      );
+    }
+
+    // Overlay left and right candidate views (same top as CandidateView)
+    if (leftCandidate != null) {
+      leftCandidate.layout(
+              left,
+              currentTop,
+              left + voiceHotKeyIconWidth,
+              currentTop + candidateHeight
+      );
+    }
+
+    if (rightCandidate != null) {
+      rightCandidate.layout(
+              right - voiceHotKeyIconWidth,
+              currentTop,
+              right,
+              currentTop + candidateHeight
+      );
+    }
+
+    currentTop += candidateHeight; // Move below candidate strip
+
+    // Layout remaining views
+    for (int i = 0; i < count; i++) {
+      final View child = getChildAt(i);
+      if (child.getVisibility() == View.GONE) continue;
+      if (child == candidateView || child == leftCandidate || child == rightCandidate) continue;
+
+      Object tag = child.getTag(PROVIDER_TAG_ID);
+      if (tag == null) {
+        child.layout(
+                left,
+                currentTop,
+                right,
+                currentTop + child.getMeasuredHeight()
+        );
+        currentTop += child.getMeasuredHeight();
+      } else {
+        // Action buttons (drawn over candidate view, right-aligned)
+        int actionsTop = t + getPaddingTop();
+        int actionRight = right - voiceHotKeyIconWidth;
+        child.layout(
+                actionRight - child.getMeasuredWidth(),
+                actionsTop,
+                actionRight,
+                actionsTop + child.getMeasuredHeight()
+        );
+      }
+    }
+
+    // Update extra offset
+    final View mainKeyboard = ((View) mStandardKeyboardView);
     mainKeyboard.getHitRect(mExtraPaddingToMainKeyboard);
     mExtraPaddingToMainKeyboard.bottom = mainKeyboard.getTop();
     mExtraPaddingToMainKeyboard.top = mainKeyboard.getTop() - mActionStripHeight / 4;
+  }
+
+  @Override
+  protected void onFinishInflate() {
+    super.onFinishInflate();
+    findViewWithTag("left_candidate_view").setOnClickListener(v -> {
+      Toast.makeText(this.getContext(), "left", Toast.LENGTH_LONG).show();
+    });
+    findViewWithTag("right_candidate_view").setOnClickListener(v -> {
+      Toast.makeText(this.getContext(), "right", Toast.LENGTH_LONG).show();
+    });
   }
 
   @Override
@@ -242,6 +320,8 @@ public class KeyboardViewContainerView extends ViewGroup implements ThemeableChi
       if (child.getTag(PROVIDER_TAG_ID) != null || child == mCandidateView) {
         // this is an action. we just need to make sure it is measured.
         measureChild(child, widthMeasureSpec, heightMeasureSpec);
+      } else if ("left_candidate_view".equals(child.getTag()) || "right_candidate_view".equals(child.getTag())) {
+        // we don't measure these height, because they are following candidate view's height
       } else {
         measureChild(child, widthMeasureSpec, heightMeasureSpec);
         totalWidth = Math.max(totalWidth, child.getMeasuredWidth());

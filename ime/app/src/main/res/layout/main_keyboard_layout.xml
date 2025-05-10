@@ -40,4 +40,22 @@
         android:layout_height="wrap_content"
         android:layout_margin="0px"
         android:padding="0px" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/candidate_strip_height"
+        android:src="@drawable/ic_action_settings"
+        android:tag="left_candidate_view"
+        android:clickable="true"
+        android:padding="4dp"
+        android:scaleType="centerInside"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/candidate_strip_height"
+        android:src="@drawable/ic_av_mic"
+        android:tag="right_candidate_view"
+        android:clickable="true"
+        />
 </com.anysoftkeyboard.keyboards.views.KeyboardViewContainerView>
