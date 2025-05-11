@@ -107,6 +107,8 @@ dependencies {
     implementation project(':api')
     implementation project(':addons:base')
     implementation project(':addons:languages:english:pack')
+    implementation project(':addons:languages:russian2:pack')
+    implementation project(':addons:languages:thai:pack')
     implementation project(':ime:base')
     implementation project(':ime:base-rx')
     implementation project(':ime:nextword')
