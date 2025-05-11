@@ -36,7 +36,7 @@
     <bool name="settings_default_enable_shift_space_language_shortcut">true</bool>
     <bool name="settings_default_key_press_shows_preview_popup">true</bool>
 
-    <bool name="settings_default_show_keyboard_name_text_value">true</bool>
+    <bool name="settings_default_show_keyboard_name_text_value">false</bool>
     <bool name="settings_default_show_hint_text_value">true</bool>
     <bool name="settings_default_use_custom_hint_align_value">false</bool>
     <!-- default values for custom hint align are in arrays.xmlso that
