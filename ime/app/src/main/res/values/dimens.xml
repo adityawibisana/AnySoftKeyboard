@@ -85,8 +85,8 @@
     <dimen name="quick_key_size">50dp</dimen>
 
     <dimen name="yochees_radius_key_corner">5dp</dimen>
-    <dimen name="watermark_size">12sp</dimen>
-    <dimen name="watermark_margin">3dp</dimen>
+    <dimen name="watermark_size">0sp</dimen>
+    <dimen name="watermark_margin">0dp</dimen>
 
     <dimen name="gesture_typing_min_point_distance">5sp</dimen>
     <dimen name="gesture_typing_frequency_factor">2.5dp</dimen>
