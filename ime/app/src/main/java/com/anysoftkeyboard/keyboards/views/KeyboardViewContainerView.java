@@ -1,5 +1,6 @@
 package com.anysoftkeyboard.keyboards.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,16 +11,14 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-
 import com.anysoftkeyboard.ime.InputViewActionsProvider;
 import com.anysoftkeyboard.ime.InputViewBinder;
 import com.anysoftkeyboard.keyboards.views.extradraw.ExtraDraw;
 import com.anysoftkeyboard.overlay.OverlayData;
 import com.anysoftkeyboard.overlay.OverlayDataImpl;
 import com.anysoftkeyboard.theme.KeyboardTheme;
+import com.emoji.voicehotkey.broadcast.BroadcastSenderHelper;
 import com.menny.android.anysoftkeyboard.BuildConfig;
 import com.menny.android.anysoftkeyboard.R;
 import java.util.ArrayList;
@@ -302,10 +301,20 @@ public class KeyboardViewContainerView extends ViewGroup implements ThemeableChi
   protected void onFinishInflate() {
     super.onFinishInflate();
     findViewWithTag("left_candidate_view").setOnClickListener(v -> {
-      Toast.makeText(this.getContext(), "left", Toast.LENGTH_LONG).show();
     });
-    findViewWithTag("right_candidate_view").setOnClickListener(v -> {
-      Toast.makeText(this.getContext(), "right", Toast.LENGTH_LONG).show();
+    findViewWithTag("right_candidate_view").setOnTouchListener(new OnTouchListener() {
+      @SuppressLint("ClickableViewAccessibility")
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        switch(event.getAction()) {
+          case MotionEvent.ACTION_DOWN:
+            BroadcastSenderHelper.sendStartRecordPressedEvent(v.getContext());
+            return true;
+          case MotionEvent.ACTION_UP:
+            BroadcastSenderHelper.sendStopRecordPressedEvent(v.getContext());
+        }
+        return true;
+      }
     });
   }
 

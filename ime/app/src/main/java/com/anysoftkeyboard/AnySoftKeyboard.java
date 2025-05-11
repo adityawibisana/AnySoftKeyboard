@@ -61,11 +61,11 @@ import com.anysoftkeyboard.keyboards.views.VoiceHotKeyStateView;
 import com.anysoftkeyboard.prefs.AnimationsLevel;
 import com.anysoftkeyboard.receivers.PackagesChangedReceiver;
 import com.anysoftkeyboard.rx.GenericOnError;
-import com.anysoftkeyboard.ui.VoiceInputNotInstalledActivity;
 import com.anysoftkeyboard.ui.dev.DevStripActionProvider;
 import com.anysoftkeyboard.ui.dev.DeveloperUtils;
 import com.anysoftkeyboard.ui.settings.MainSettingsActivity;
 import com.anysoftkeyboard.utils.IMEUtil;
+import com.emoji.voicehotkey.broadcast.BroadcastSenderHelper;
 import com.google.android.voiceime.VoiceRecognitionTrigger;
 import com.menny.android.anysoftkeyboard.AnyApplication;
 import com.menny.android.anysoftkeyboard.BuildConfig;
@@ -1193,10 +1193,7 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
     }
 
     if (primaryCode == KeyCodes.VOICE_INPUT) {
-      final Intent pressedIntent = new Intent("com.anysoftkeyboard.action.voice_input");
-      pressedIntent.putExtra("action", "pressed");
-      LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pressedIntent);
-      Log.v("vhk", "sending broadcast: com.anysoftkeyboard.action.voice_input pressed");
+      BroadcastSenderHelper.sendStartRecordPressedEvent(getApplicationContext());
     }
   }
 
@@ -1222,10 +1219,7 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
     handleControl();
 
     if (primaryCode == KeyCodes.VOICE_INPUT) {
-      final Intent pressedIntent = new Intent("com.anysoftkeyboard.action.voice_input");
-      pressedIntent.putExtra("action", "released");
-      LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pressedIntent);
-      Log.v("vhk", "sending broadcast: com.anysoftkeyboard.action.voice_input released");
+      BroadcastSenderHelper.sendStopRecordPressedEvent(getApplicationContext());
     }
   }
 
