@@ -7,11 +7,16 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.os.IBinder;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
+
 import com.anysoftkeyboard.ime.InputViewActionsProvider;
 import com.anysoftkeyboard.ime.InputViewBinder;
 import com.anysoftkeyboard.keyboards.views.extradraw.ExtraDraw;
@@ -21,6 +26,8 @@ import com.anysoftkeyboard.theme.KeyboardTheme;
 import com.emoji.voicehotkey.broadcast.BroadcastSenderHelper;
 import com.menny.android.anysoftkeyboard.BuildConfig;
 import com.menny.android.anysoftkeyboard.R;
+
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -266,7 +273,12 @@ public class KeyboardViewContainerView extends ViewGroup implements ThemeableChi
     for (int i = 0; i < count; i++) {
       final View child = getChildAt(i);
       if (child.getVisibility() == View.GONE) continue;
-      if (child == candidateView || child == leftCandidate || child == rightCandidate) continue;
+      if (child == candidateView
+          || child == leftCandidate
+          || child == rightCandidate
+      ) {
+        continue;
+      }
 
       Object tag = child.getTag(PROVIDER_TAG_ID);
       if (tag == null) {
@@ -301,6 +313,21 @@ public class KeyboardViewContainerView extends ViewGroup implements ThemeableChi
   protected void onFinishInflate() {
     super.onFinishInflate();
     findViewWithTag("left_candidate_view").setOnClickListener(v -> {
+      /**
+       * Show dialog from voicehotkey
+       * We're not using broadcast + call activity, because it will close current keyboard
+       *
+      */
+      try {
+        Class<?> clazz = Class.forName("voice.hot.key.ui.ConfigurationDialog");
+        Object instance = clazz.getField("INSTANCE").get(null); // For Kotlin object
+        Method showMethod = clazz.getDeclaredMethod("show", AlertDialog.Builder.class, IBinder.class);
+        showMethod.setAccessible(true);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(v.getContext(), R.style.Theme_AskAlertDialog));
+        showMethod.invoke(instance, dialogBuilder, getWindowToken());
+      } catch (Exception e) {
+        throw new RuntimeException("Reflection call failed", e);
+      }
     });
     findViewWithTag("right_candidate_view").setOnTouchListener(new OnTouchListener() {
       @SuppressLint("ClickableViewAccessibility")
