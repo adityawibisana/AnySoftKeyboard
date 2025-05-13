@@ -1441,7 +1441,7 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
 
       final InputConnection ic = getCurrentInputConnection();
       if (ic != null) {
-        ic.commitText(result, 1);
+        ic.commitText(result + " ", 1);
       }
     }
 
