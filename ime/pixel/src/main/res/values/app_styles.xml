@@ -8,8 +8,8 @@
         <item name="android:imeFullscreenBackground">@null</item>
         <item name="preferenceTheme">@style/Theme.AskPrefs</item>
 
-        <item name="colorPrimary">@color/app_color_primary</item>
-        <item name="colorPrimaryDark">@color/app_color_primary_dark</item>
+<!--        <item name="colorPrimary">@color/app_color_primary</item>-->
+<!--        <item name="colorPrimaryDark">@color/app_color_primary_dark</item>-->
 
         <item name="android:textAppearance">@style/Ask.Text.Normal</item>
         <item name="android:textAppearanceSmall">@style/Ask.Text.Small</item>
@@ -31,8 +31,8 @@
         <item name="android:textColorLink">@color/text_color_link</item>
         <item name="colorAccent">@color/app_accent</item>
 
-        <item name="colorPrimary">@color/app_color_primary</item>
-        <item name="colorPrimaryDark">@color/app_color_primary_dark</item>
+<!--        <item name="colorPrimary">@color/app_color_primary</item>-->
+<!--        <item name="colorPrimaryDark">@color/app_color_primary_dark</item>-->
 
         <item name="android:textAppearance">@style/Ask.Text.Normal</item>
         <item name="android:textAppearanceSmall">@style/Ask.Text.Small</item>
