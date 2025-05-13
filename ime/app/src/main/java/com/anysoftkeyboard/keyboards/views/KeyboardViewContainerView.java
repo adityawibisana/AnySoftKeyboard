@@ -307,7 +307,7 @@ public class KeyboardViewContainerView extends ViewGroup implements ThemeableChi
     final View mainKeyboard = ((View) mStandardKeyboardView);
     mainKeyboard.getHitRect(mExtraPaddingToMainKeyboard);
     mExtraPaddingToMainKeyboard.bottom = mainKeyboard.getTop();
-    mExtraPaddingToMainKeyboard.top = mainKeyboard.getTop() - mActionStripHeight / 4;
+//    mExtraPaddingToMainKeyboard.top = mainKeyboard.getTop() - mActionStripHeight / 4;
   }
 
   @Override
