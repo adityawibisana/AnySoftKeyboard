@@ -8,17 +8,16 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
-
 import com.anysoftkeyboard.ime.InputViewActionsProvider;
 import com.anysoftkeyboard.ime.InputViewBinder;
 import com.anysoftkeyboard.keyboards.views.extradraw.ExtraDraw;
@@ -29,11 +28,11 @@ import com.emoji.voicehotkey.bridge.DIBridge;
 import com.emoji.voicehotkey.broadcast.BroadcastSenderHelper;
 import com.menny.android.anysoftkeyboard.BuildConfig;
 import com.menny.android.anysoftkeyboard.R;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import net.evendanan.pixel.MainChild;
+import kotlin.Unit;
 
 public class KeyboardViewContainerView extends ViewGroup implements ThemeableChild {
 
@@ -318,12 +317,17 @@ public class KeyboardViewContainerView extends ViewGroup implements ThemeableChi
       AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(v.getContext(), R.style.Theme_AskAlertDialog));
       dialogBuilder.setView(DIBridge.INSTANCE.getConfigurationOptionViewProvider().getView());
       Dialog dialog = dialogBuilder.create();
+      DIBridge.INSTANCE.setDialogCloseAction(() -> {
+        dialog.hide();
+        return Unit.INSTANCE;
+      });
       Window window = dialog.getWindow();
       if (window != null) {
         WindowManager.LayoutParams params = window.getAttributes();
         params.token = getWindowToken();
         params.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
         window.setAttributes(params);
+        window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
       }
       dialog.show();
     });
