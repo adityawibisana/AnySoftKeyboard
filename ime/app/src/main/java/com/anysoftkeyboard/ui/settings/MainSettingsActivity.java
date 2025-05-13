@@ -63,7 +63,7 @@ public class MainSettingsActivity extends AppCompatActivity {
     // applying my very own Edge-Effect color
     EdgeEffectHacker.brandGlowEffect(this, ContextCompat.getColor(this, R.color.app_accent));
 
-    handlePermissionRequest(getIntent());
+//    handlePermissionRequest(getIntent());
   }
 
   private void handlePermissionRequest(Intent intent) {
