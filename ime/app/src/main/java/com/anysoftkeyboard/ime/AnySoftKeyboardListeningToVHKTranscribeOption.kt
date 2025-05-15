@@ -8,8 +8,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.anysoftkeyboard.keyboards.views.AnyKeyboardView
 import com.anysoftkeyboard.keyboards.views.VoiceHotKeyTranscribeModeStateView.ShortcutActions
 
-abstract class AnySoftKeyboardListeningToVHKTranscribeOption : AnySoftKeyboardIncognito() {
-    val voiceHotKeyTranscribeModeStateBroadcastReceiver = object : BroadcastReceiver() {
+abstract class AnySoftKeyboardListeningToVHKTranscribeOption : AnySoftKeyboardListeningToVHKState() {
+    private val voiceHotKeyTranscribeModeStateBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val inputViewBinder = inputView ?: return
             context ?: return

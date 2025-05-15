@@ -102,7 +102,6 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
   private boolean mAutoCap;
   private boolean mKeyboardAutoCap;
   private AnySoftKeyboardVoiceHotKeyBroadcastReceiver anySoftKeyboardVoiceHotKeyBroadcastReceiver;
-  private VoiceHotKeyStateBroadcastReceiver voiceHotKeyStateBroadcastReceiver;
 
   private static boolean isBackWordDeleteCodePoint(int c) {
     return Character.isLetterOrDigit(c);
@@ -255,11 +254,6 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
             anySoftKeyboardVoiceHotKeyBroadcastReceiver,
             anySoftKeyboardVoiceHotKeyBroadcastReceiver.getIntentFilter()
     );
-    voiceHotKeyStateBroadcastReceiver = new VoiceHotKeyStateBroadcastReceiver();
-    LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
-            voiceHotKeyStateBroadcastReceiver,
-            voiceHotKeyStateBroadcastReceiver.getIntentFilter()
-    );
   }
 
   @Override
@@ -282,7 +276,6 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
     }
 
     LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(anySoftKeyboardVoiceHotKeyBroadcastReceiver);
-    LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(voiceHotKeyStateBroadcastReceiver);
     super.onDestroy();
   }
 
@@ -1450,29 +1443,6 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
 
     public IntentFilter getIntentFilter() {
       return new IntentFilter("com.emoji.voicehotkey.transcribe");
-    }
-  }
-
-  public class VoiceHotKeyStateBroadcastReceiver extends BroadcastReceiver {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      Log.v("VoiceHotKeyStateBroadcastReceiver", "onReceive");
-      final int state = intent.getIntExtra("state", 0);
-
-      InputViewBinder inputViewBinder = getInputView();
-      if (inputViewBinder != null) {
-        final AnyKeyboardView anyKeyboardView = (AnyKeyboardView) inputViewBinder;
-        switch (state) {
-          case 0 -> anyKeyboardView.setState(VoiceHotKeyStateView.VoiceHotKeyState.IDLE);
-          case 1 -> anyKeyboardView.setState(VoiceHotKeyStateView.VoiceHotKeyState.RECORDING);
-          case 2 -> anyKeyboardView.setState(VoiceHotKeyStateView.VoiceHotKeyState.TRANSCRIBING);
-          case 3 -> anyKeyboardView.setState(VoiceHotKeyStateView.VoiceHotKeyState.AI_TRANSCRIBING);
-        }
-      }
-    }
-
-    public IntentFilter getIntentFilter() {
-      return new IntentFilter("com.emoji.voicehotkey.state");
     }
   }
 }
