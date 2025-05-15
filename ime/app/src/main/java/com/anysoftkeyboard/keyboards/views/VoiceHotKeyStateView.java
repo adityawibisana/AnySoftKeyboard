@@ -9,7 +9,7 @@ import com.airbnb.lottie.LottieDrawable;
 import com.airbnb.lottie.LottieComposition;
 import com.menny.android.anysoftkeyboard.R;
 
-public class VoiceHotKeyStateView extends AnyKeyboardViewBase {
+public class VoiceHotKeyStateView extends VoiceHotKeyTranscribeModeStateView {
     private LottieDrawable lottieRecording;
     private LottieDrawable lottieTranscribing;
     private LottieDrawable lottieAI;

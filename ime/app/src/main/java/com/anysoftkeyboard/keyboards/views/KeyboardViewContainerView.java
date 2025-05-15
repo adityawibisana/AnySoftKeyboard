@@ -319,6 +319,8 @@ public class KeyboardViewContainerView extends ViewGroup implements ThemeableChi
       Dialog dialog = dialogBuilder.create();
       DIBridge.INSTANCE.setDialogCloseAction(() -> {
         dialog.hide();
+        final AnyKeyboardView anyKeyboardView = (AnyKeyboardView) getStandardKeyboardView();
+        anyKeyboardView.forceReloadState(getContext());
         return Unit.INSTANCE;
       });
       Window window = dialog.getWindow();
