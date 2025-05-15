@@ -15,7 +15,7 @@ import com.anysoftkeyboard.keyboards.views.KeyboardViewContainerView;
 import com.anysoftkeyboard.rx.GenericOnError;
 import com.menny.android.anysoftkeyboard.R;
 
-public abstract class AnySoftKeyboardColorizeNavBar extends AnySoftKeyboardIncognito {
+public abstract class AnySoftKeyboardColorizeNavBar extends AnySoftKeyboardListeningToVHKTranscribeOption {
 
   private static final int NO_ID = 0;
 

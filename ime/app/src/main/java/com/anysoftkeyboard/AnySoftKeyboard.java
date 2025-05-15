@@ -103,7 +103,6 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
   private boolean mKeyboardAutoCap;
   private AnySoftKeyboardVoiceHotKeyBroadcastReceiver anySoftKeyboardVoiceHotKeyBroadcastReceiver;
   private VoiceHotKeyStateBroadcastReceiver voiceHotKeyStateBroadcastReceiver;
-  private VoiceHotKeyTranscribeModeStateBroadcastReceiver voiceHotKeyTranscribeModeStateBroadcastReceiver;
 
   private static boolean isBackWordDeleteCodePoint(int c) {
     return Character.isLetterOrDigit(c);
@@ -261,11 +260,6 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
             voiceHotKeyStateBroadcastReceiver,
             voiceHotKeyStateBroadcastReceiver.getIntentFilter()
     );
-    voiceHotKeyTranscribeModeStateBroadcastReceiver = new VoiceHotKeyTranscribeModeStateBroadcastReceiver();
-    LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
-            voiceHotKeyTranscribeModeStateBroadcastReceiver,
-            voiceHotKeyTranscribeModeStateBroadcastReceiver.getIntentFilter()
-    );
   }
 
   @Override
@@ -289,7 +283,6 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
 
     LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(anySoftKeyboardVoiceHotKeyBroadcastReceiver);
     LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(voiceHotKeyStateBroadcastReceiver);
-    LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(voiceHotKeyTranscribeModeStateBroadcastReceiver);
     super.onDestroy();
   }
 
@@ -1480,22 +1473,6 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
 
     public IntentFilter getIntentFilter() {
       return new IntentFilter("com.emoji.voicehotkey.state");
-    }
-  }
-
-  public class VoiceHotKeyTranscribeModeStateBroadcastReceiver extends BroadcastReceiver {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      InputViewBinder inputViewBinder = getInputView();
-      if (inputViewBinder == null) return;
-      final AnyKeyboardView anyKeyboardView = (AnyKeyboardView) inputViewBinder;
-
-      final int mode = intent.getIntExtra("mode", -1);
-      anyKeyboardView.setState(((AnyKeyboardView) inputViewBinder).getContext(), Objects.requireNonNull(VoiceHotKeyTranscribeModeStateView.ShortcutActions.fromInt(mode)));
-    }
-
-    public IntentFilter getIntentFilter() {
-      return new IntentFilter("com.emoji.voicehotkey.transcribe_mode");
     }
   }
 }
