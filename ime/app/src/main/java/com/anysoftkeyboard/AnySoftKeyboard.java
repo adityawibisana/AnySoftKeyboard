@@ -16,11 +16,8 @@
 
 package com.anysoftkeyboard;
 
-import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.IBinder;
@@ -41,8 +38,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import com.anysoftkeyboard.api.KeyCodes;
 import com.anysoftkeyboard.base.utils.Logger;
 import com.anysoftkeyboard.dictionaries.DictionaryAddOnAndBuilder;
@@ -57,8 +52,6 @@ import com.anysoftkeyboard.keyboards.KeyboardAddOnAndBuilder;
 import com.anysoftkeyboard.keyboards.KeyboardSwitcher;
 import com.anysoftkeyboard.keyboards.KeyboardSwitcher.NextKeyboardType;
 import com.anysoftkeyboard.keyboards.views.AnyKeyboardView;
-import com.anysoftkeyboard.keyboards.views.VoiceHotKeyStateView;
-import com.anysoftkeyboard.keyboards.views.VoiceHotKeyTranscribeModeStateView;
 import com.anysoftkeyboard.prefs.AnimationsLevel;
 import com.anysoftkeyboard.receivers.PackagesChangedReceiver;
 import com.anysoftkeyboard.rx.GenericOnError;
@@ -75,7 +68,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import net.evendanan.pixel.GeneralDialogController;
 
@@ -101,7 +93,6 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
 
   private boolean mAutoCap;
   private boolean mKeyboardAutoCap;
-  private AnySoftKeyboardVoiceHotKeyBroadcastReceiver anySoftKeyboardVoiceHotKeyBroadcastReceiver;
 
   private static boolean isBackWordDeleteCodePoint(int c) {
     return Character.isLetterOrDigit(c);
@@ -243,17 +234,6 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
     mVoiceRecognitionTrigger = new VoiceRecognitionTrigger(this);
 
     mDevToolsAction = new DevStripActionProvider(this);
-
-    registerVoiceHotKeyReceiver();
-  }
-
-  @SuppressLint("WrongConstant")
-  private void registerVoiceHotKeyReceiver() {
-    anySoftKeyboardVoiceHotKeyBroadcastReceiver = new AnySoftKeyboardVoiceHotKeyBroadcastReceiver();
-    LocalBroadcastManager.getInstance(this.getApplicationContext()).registerReceiver(
-            anySoftKeyboardVoiceHotKeyBroadcastReceiver,
-            anySoftKeyboardVoiceHotKeyBroadcastReceiver.getIntentFilter()
-    );
   }
 
   @Override
@@ -274,8 +254,6 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
               Toast.LENGTH_SHORT)
           .show();
     }
-
-    LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(anySoftKeyboardVoiceHotKeyBroadcastReceiver);
     super.onDestroy();
   }
 
@@ -1427,22 +1405,5 @@ public abstract class AnySoftKeyboard extends AnySoftKeyboardColorizeNavBar {
     Logger.d(TAG, "shift updateShiftStateNow inputSaysCaps=%s", inputSaysCaps);
     mShiftKeyState.setActiveState(inputSaysCaps);
     handleShift();
-  }
-
-  public class AnySoftKeyboardVoiceHotKeyBroadcastReceiver extends BroadcastReceiver {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      Log.v("AnySoftKeyboardVoiceHotKeyBroadcastReceiver", "onReceive");
-      final String result = intent.getStringExtra("result");
-
-      final InputConnection ic = getCurrentInputConnection();
-      if (ic != null) {
-        ic.commitText(result + " ", 1);
-      }
-    }
-
-    public IntentFilter getIntentFilter() {
-      return new IntentFilter("com.emoji.voicehotkey.transcribe");
-    }
   }
 }

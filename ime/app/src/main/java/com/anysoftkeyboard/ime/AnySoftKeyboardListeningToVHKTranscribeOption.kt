@@ -37,8 +37,7 @@ abstract class AnySoftKeyboardListeningToVHKTranscribeOption : AnySoftKeyboardLi
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-
         LocalBroadcastManager.getInstance(applicationContext).unregisterReceiver(voiceHotKeyTranscribeModeStateBroadcastReceiver)
+        super.onDestroy()
     }
 }

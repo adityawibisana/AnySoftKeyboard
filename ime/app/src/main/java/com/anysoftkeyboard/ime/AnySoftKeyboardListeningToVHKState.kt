@@ -9,7 +9,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.anysoftkeyboard.keyboards.views.AnyKeyboardView
 import com.anysoftkeyboard.keyboards.views.VoiceHotKeyStateView
 
-abstract class AnySoftKeyboardListeningToVHKState : AnySoftKeyboardIncognito() {
+abstract class AnySoftKeyboardListeningToVHKState : AnySoftKeyboardListeningToVHKTranscribeResult() {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.v("VoiceHotKeyStateBroadcastReceiver", "onReceive")
@@ -37,7 +37,7 @@ abstract class AnySoftKeyboardListeningToVHKState : AnySoftKeyboardIncognito() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         LocalBroadcastManager.getInstance(applicationContext).unregisterReceiver(receiver)
+        super.onDestroy()
     }
 }
