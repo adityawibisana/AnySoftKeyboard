@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.Animator.AnimatorListener
 import android.content.Context
 import android.graphics.Canvas
-import android.telecom.Call.Details.can
 import android.util.AttributeSet
 import androidx.core.graphics.withSave
 import com.airbnb.lottie.LottieComposition
@@ -62,7 +61,9 @@ open class VoiceHotKeyTranscribeModeStateView : AnyKeyboardViewBase {
             override fun onAnimationCancel(animation: Animator) { }
             override fun onAnimationRepeat(animation: Animator) { }
             override fun onAnimationEnd(animation: Animator) {
-                currentLottieDrawable = null
+                if (drawable == currentLottieDrawable) {
+                    currentLottieDrawable = null
+                }
             }
         })
         drawable.playAnimation()
