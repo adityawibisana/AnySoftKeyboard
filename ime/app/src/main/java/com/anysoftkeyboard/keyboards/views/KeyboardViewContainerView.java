@@ -216,7 +216,7 @@ public class KeyboardViewContainerView extends ViewGroup implements ThemeableChi
     final int left = l + getPaddingLeft();
     final int right = r - getPaddingRight();
     int currentTop = t + getPaddingTop();
-    final int voiceHotKeyIconWidth = 80;
+    final int voiceHotKeyIconWidth = 120;
 
     View candidateView = null;
     View leftCandidate = null;
